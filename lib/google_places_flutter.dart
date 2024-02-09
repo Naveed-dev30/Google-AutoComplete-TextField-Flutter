@@ -139,6 +139,7 @@ class _GooglePlaceAutoCompleteTextFieldState
 
     try {
       Response response = await _dio.get(url);
+      print(response);
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
       Map map = response.data;
@@ -250,6 +251,8 @@ class _GooglePlaceAutoCompleteTextFieldState
     Response response = await Dio().get(
       url,
     );
+
+
 
     PlaceDetails placeDetails = PlaceDetails.fromJson(response.data);
 
