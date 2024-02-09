@@ -1,7 +1,7 @@
 library google_places_flutter;
 
+import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_places_flutter/model/place_details.dart';
@@ -12,6 +12,7 @@ import 'package:dio/dio.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'DioErrorHandler.dart';
+import 'package:http/http.dart' as http;
 
 class GooglePlaceAutoCompleteTextField extends StatefulWidget {
   InputDecoration inputDecoration;
@@ -138,17 +139,21 @@ class _GooglePlaceAutoCompleteTextFieldState
     }
 
     try {
-      Response response = await _dio.get(url);
+      http.Client httpClient() => http.Client();
+      final client = httpClient();
+
+      final response = await client.get(Uri.parse(url));
       print(response);
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
-      Map map = response.data;
+      Map<String, dynamic> map =
+          json.decode(response.body) as Map<String, dynamic>;
       if (map.containsKey("error_message")) {
-        throw response.data;
+        throw map;
       }
 
       PlacesAutocompleteResponse subscriptionResponse =
-          PlacesAutocompleteResponse.fromJson(response.data);
+          PlacesAutocompleteResponse.fromJson(map);
 
       if (text.length == 0) {
         alPredictions.clear();
@@ -251,8 +256,6 @@ class _GooglePlaceAutoCompleteTextFieldState
     Response response = await Dio().get(
       url,
     );
-
-
 
     PlaceDetails placeDetails = PlaceDetails.fromJson(response.data);
 
