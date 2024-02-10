@@ -117,21 +117,21 @@ class _GooglePlaceAutoCompleteTextFieldState
 
   getLocation(String text) async {
     String url =
-        "${Platform.isIOS || Platform.isAndroid ? "https://maps.googleapis.com/maps/api/place/autocomplete/json" : "https://proxy-places-request.vercel.app/api/proxy-places"}?input=$text&key=${widget.googleAPIKey}";
+        "${false ? "https://maps.googleapis.com/maps/api/place/autocomplete/json" : "https://proxy-places-request.vercel.app/api/proxy-places"}?input=$text&key=${widget.googleAPIKey}";
 
-    if (widget.countries != null) {
-      // in
-
-      for (int i = 0; i < widget.countries!.length; i++) {
-        String country = widget.countries![i];
-
-        if (i == 0) {
-          url = url + "&components=country:$country";
-        } else {
-          url = url + "|" + "country:" + country;
-        }
-      }
-    }
+    // if (widget.countries != null) {
+    //   // in
+    //
+    //   for (int i = 0; i < widget.countries!.length; i++) {
+    //     String country = widget.countries![i];
+    //
+    //     if (i == 0) {
+    //       url = url + "&components=country:$country";
+    //     } else {
+    //       url = url + "|" + "country:" + country;
+    //     }
+    //   }
+    // }
 
     if (_cancelToken?.isCancelled == false) {
       _cancelToken?.cancel();
